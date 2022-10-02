@@ -1,0 +1,13 @@
+# this playbook is too be called with a configured ansible inventory
+# all hosts in group lxd will be configured
+- hosts: all
+  gather_facts: false
+  connection: lxd
+  tasks:
+    - name: Connect to started lxd container, write a single file
+      become: yes
+      copy:
+        dest: "/root/hello"
+        content: |
+          hello lxd container
+          .
