@@ -10,21 +10,21 @@
       become: false
       local_action: command whoami
       register: username
-    - name: get the priviledged user running the deploy
+    - name: get the privileged user running the deploy
       become: true
       local_action: command whoami
       register: become_username
 
     - name: Connect to started lxd container, write a single file as ansible user
       copy:
-        dest: "/home/ansible/hello.txt"
+        dest: "/home/ansible/ansible.txt"
         mode: 0700
         owner: ansible
         content: "hello as {{ username.stdout }}\n"
     - name: Connect to started lxd container, write a single file as root
       become: yes
       copy:
-        dest: "/root/hello.txt"
+        dest: "/root/root.txt"
         mode: 0700
         owner: root
         content: "hello as {{ become_username.stdout }}\n"
