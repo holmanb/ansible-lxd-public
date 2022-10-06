@@ -1,13 +1,31 @@
 # this playbook is too be called with a configured ansible inventory
 # all hosts in group lxd will be configured
 - hosts: all
-  gather_facts: false
+  gather_facts: true
   connection: lxd
+  become_user: root
+
   tasks:
-    - name: Connect to started lxd container, write a single file
+    - name: get the username running the deploy
+      become: false
+      local_action: command whoami
+      register: username
+    - name: get the priviledged user running the deploy
+      become: true
+      local_action: command whoami
+      register: become_username
+
+    - name: Connect to started lxd container, write a single file as ansible user
+      copy:
+        dest: "/home/ansible/hello.txt"
+        mode: 0700
+        owner: ansible
+        content: "hello as {{ username.stdout }}\n"
+    - name: Connect to started lxd container, write a single file as root
       become: yes
       copy:
-        dest: "/root/hello"
-        content: |
-          hello lxd container
-          .
+        dest: "/root/hello.txt"
+        mode: 0700
+        owner: root
+        content: "hello as {{ become_username.stdout }}\n"
+
