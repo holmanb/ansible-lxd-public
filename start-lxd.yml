@@ -18,7 +18,7 @@
           protocol: simplestreams
           alias: jammy
         config:
-          cloud-init.user-data: |
+          user.user-data: |
             #cloud-config
             users:
             - name: ansible
